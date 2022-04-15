@@ -11,11 +11,11 @@ class LanguageModel(nn.Module):
         # Create an embedding layer of shape [vocab_size, rnn_size]
         # Use nn.Embedding
         # That will map each word in our vocab into a vector of rnn_size size.
-        self.embedding = your_code
+        self.embedding = nn.Embedding(vocab_size, rnn_size)
 
         # Create an LSTM layer of rnn_size size. Use any features you wish.
         # We will be using batch_first convention
-        self.lstm = your_code
+        self.lstm = nn.LSTM(input_size=rnn_size, hidden_size=rnn_size, num_layers=num_layers, batch_first=True, dropout=dropout)
         # LSTM layer does not add dropout to the last hidden output.
         # Add this if you wish.
         # self.dropout = nn.Dropout(p=dropout)
@@ -24,7 +24,7 @@ class LanguageModel(nn.Module):
         self.output = nn.Linear(rnn_size, vocab_size)
 
     def forward(self,x):
-        embeds = your_code
-        lstm_out, _ = your_code
-        logits = your_code
+        embeds = self.embedding(x)
+        lstm_out, _ = self.lstm(embeds)
+        logits = self.output(lstm_out)
         return logits
